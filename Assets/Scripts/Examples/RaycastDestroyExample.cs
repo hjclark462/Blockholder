@@ -5,13 +5,13 @@ using UnityEngine;
 public class RaycastDestroyExample : MonoBehaviour
 {
     public GameObject m_terrain;
-    SquareGen m_script;
+    WallGen m_script;
     public GameObject m_target;
     LayerMask m_layerMask = (1 << 0);
 
     void Start()
     {
-        m_script = m_terrain.GetComponent<SquareGen>();
+        m_script = m_terrain.GetComponent<WallGen>();
     }
 
     // Update is called once per frame

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Security;
 using UnityEngine;
 
-public class SquareGen : MonoBehaviour
+public class WallGen : MonoBehaviour
 {
     // Render List
     public List<Vector3> m_verts = new List<Vector3>();
@@ -22,8 +22,7 @@ public class SquareGen : MonoBehaviour
     public int m_col = 1;
 
     float m_tUnit = 0.25f;
-    Vector2 m_tStone = new Vector2(3, 3);
-    Vector2 m_tGrass = new Vector2(0, 1);
+    Vector2 m_tStone = new Vector2(3, 3);    
 
     int m_squareCount;
 
@@ -64,33 +63,16 @@ public class SquareGen : MonoBehaviour
 
         for (int x = 0; x < m_blocks.GetLength(0); x++)
         {
-            int stone = Noise(x, 0, 80, 15, 1);
-            stone += Noise(x, 0, 50, 30, 1);
-            stone += Noise(x, 0, 10, 10, 1);
-            stone += 75;
-
-            int dirt = Noise(x, 0, 100f, 35, 1);
-            dirt += Noise(x, 100, 50, 30, 1);
-            dirt += 75;
+            int rand = Noise(x, 0, 80, 15, 1);
+            rand += Noise(x, 0, 50, 30, 1);
+            rand += Noise(x, 0, 10, 10, 1);
+            rand += 75;
 
             for (int y = 0; y < m_blocks.GetLength(1); y++)
             {
-                if (y < stone)
+                if (y < rand)
                 {
                     m_blocks[x, y] = 1;
-
-                    if (Noise(x, y, 12, 16, 1) > 10)
-                    {
-                        m_blocks[x, y] = 1;
-                    }
-                    if(Noise(x, y*2, 16, 14, 1)>10)
-                    {
-                        m_blocks[x, y] = 0;
-                    }
-                }
-                else if (y < dirt)
-                {
-                    m_blocks[x, y] = 2;
                 }
             }
         }
@@ -221,11 +203,11 @@ public class SquareGen : MonoBehaviour
 
     bool IsBorderBlock(int x, int y)
     {
-        if (x == -1 || x == m_blocks.GetLength(0) || y == -1 || y == m_blocks.GetLength(1)|| m_blocks[x, y]==0)
+        if (x == -1 || x == m_blocks.GetLength(0) || y == -1 || y == m_blocks.GetLength(1) || m_blocks[x, y] == 0)
         {
             return true;
         }
-        if(m_blocks[x, y] == 0)
+        if (m_blocks[x, y] == 0)
         {
             return true;
         }

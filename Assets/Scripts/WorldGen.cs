@@ -92,7 +92,6 @@ public class WorldGen : MonoBehaviour
     {
         if (x < m_worldX / m_chunkSize && x >= 0 && y < m_worldY / m_chunkSize && y >= 0 && z < m_worldZ / m_chunkSize && z >= 0)
         {
-            Debug.Log(x + " " + y + " " + z);
             m_chunks[x, y, z].m_update = true;
         }
     }
@@ -101,7 +100,6 @@ public class WorldGen : MonoBehaviour
     {
         if (x < m_worldX && x >= 0 && y < m_worldY && y >= 0 && z < m_worldZ && z >= 0)
         {
-            Debug.Log(x + " " + y + " " + z);
             m_data[x, y, z] = block;
         }
     }

@@ -5,14 +5,14 @@ using UnityEngine;
 public class ColliderExample : MonoBehaviour
 {
     public GameObject m_terrain;
-    SquareGen m_script;
+    WallGen m_script;
     public int m_size = 4;
     public bool m_circular = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        m_script = m_terrain.GetComponent<SquareGen>();
+        m_script = m_terrain.GetComponent<WallGen>();
     }
 
     // Update is called once per frame

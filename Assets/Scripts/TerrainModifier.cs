@@ -25,7 +25,7 @@ public class TerrainModifier : MonoBehaviour
             AddBlockCenter(5, 1);
         }
 
-        LoadChunks(m_cameraGO.transform.position, 32, 48);
+        LoadChunks(m_cameraGO.transform.position, 23, 24);
     }
 
     //Replace in front of player
@@ -40,7 +40,7 @@ public class TerrainModifier : MonoBehaviour
             {
                 Vector3 pos = hit.point;
                 pos += ray.direction.normalized * 0.1f;
-                
+
                 SetBlockAt(pos, block);
             }
         }
@@ -115,22 +115,22 @@ public class TerrainModifier : MonoBehaviour
 
     public void LoadChunks(Vector3 playerPos, float distanceToLoad, float distanceToUnload)
     {
-        for(int x = 0; x < m_world.m_chunks.GetLength(0); x++)
+        for (int x = 0; x < m_world.m_chunks.GetLength(0); x++)
         {
-            for(int z = 0; z < m_world.m_chunks.GetLength(2); z++)
+            for (int z = 0; z < m_world.m_chunks.GetLength(2); z++)
             {
-                float distance = Vector2.Distance(new Vector2(x * m_world.m_chunkSize, z * m_world.m_chunkSize), new Vector2(playerPos.x, playerPos.z));
+                float distance = Vector2.Distance(new Vector2(x * m_world.m_chunkSize + (m_world.m_chunkSize * 0.5f), z * m_world.m_chunkSize + (m_world.m_chunkSize * 0.5f)), new Vector2(playerPos.x, playerPos.z));
 
-                if(distance < distanceToLoad)
+                if (distance < distanceToLoad)
                 {
                     if (m_world.m_chunks[x, 0, z] == null)
                     {
                         m_world.GenerateColumn(x, z);
                     }
                 }
-                else if(distance >  distanceToUnload)
+                else if (distance > distanceToUnload)
                 {
-                    if (m_world.m_chunks[x, 0, z]!= null)
+                    if (m_world.m_chunks[x, 0, z] != null)
                     {
                         m_world.DegenerateColumn(x, z);
                     }
