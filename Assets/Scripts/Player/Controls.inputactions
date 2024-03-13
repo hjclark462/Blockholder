@@ -33,7 +33,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "MeleeAttack",
+                    "name": "RightHand",
                     "type": "Button",
                     "id": "51675da9-7f08-4552-a75c-799f67969cb3",
                     "expectedControlType": "Button",
@@ -42,36 +42,9 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Sprint",
-                    "type": "Button",
-                    "id": "0017de31-f7f4-4efe-b8d7-dd9b69c050d8",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Ranged Attack",
+                    "name": "LeftHand",
                     "type": "Button",
                     "id": "6dc8a561-affe-4cfd-9b69-7de95533b6a3",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Block",
-                    "type": "Button",
-                    "id": "4ffd571c-f9bf-4f18-8299-96713f2d4ad3",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Interact",
-                    "type": "Button",
-                    "id": "0adcef37-75c3-4303-bad5-3e12534ec32a",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -81,6 +54,15 @@
                     "name": "Pause",
                     "type": "Button",
                     "id": "a859dc88-1432-4246-b917-9dfb7fa2ee10",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SwapPlace",
+                    "type": "Button",
+                    "id": "ede711ac-69ab-484f-be4c-b9099f26ee25",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -179,11 +161,11 @@
                 {
                     "name": "",
                     "id": "46871f73-fc97-413d-91a2-061db8de428c",
-                    "path": "<Mouse>/leftButton",
+                    "path": "<Mouse>/rightButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "MeleeAttack",
+                    "action": "RightHand",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -194,40 +176,18 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "MeleeAttack",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "42d7d7a1-b181-4e17-affd-70c887f219e9",
-                    "path": "<Keyboard>/leftShift",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Sprint",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "7ca31d73-209b-4d3d-9f75-e49bc29bc011",
-                    "path": "<Gamepad>/leftStick/down",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Sprint",
+                    "action": "RightHand",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
                     "id": "0517d64a-92cc-4103-b962-ed6d0b5fceb9",
-                    "path": "<Keyboard>/q",
+                    "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Ranged Attack",
+                    "action": "LeftHand",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -238,51 +198,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Ranged Attack",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "41aca654-eeff-46ad-a908-739702535f2d",
-                    "path": "<Gamepad>/leftTrigger",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Block",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "1f35e825-d08e-4361-8275-ee4d06c4e14e",
-                    "path": "<Mouse>/rightButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Block",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "b67162d8-4005-4c40-90ff-5547fedaa492",
-                    "path": "<Keyboard>/e",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Interact",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "ed2a1bfe-8597-409c-9f2e-b736ef6c25e3",
-                    "path": "<Gamepad>/buttonWest",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Interact",
+                    "action": "LeftHand",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -327,6 +243,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "09553bfc-0f45-4083-bc42-445cb9a46ede",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SwapPlace",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "71eecb0f-c3bd-4ad6-99a4-5392b794e702",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SwapPlace",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -14,6 +14,12 @@ public class WorldGen : MonoBehaviour
     public GameObject m_chunk;
     public ChunkGen[,,] m_chunks;
     public int m_chunkSize = 16;
+    public Vector3Int m_perlinY = new Vector3Int(10,350,100);
+    public Vector3 m_perlinScale = new Vector3(10.0f,20.0f,50.0f);
+    public Vector3 m_perlinHeight = new Vector3(3.0f, 4.0f, 3.0f);
+    public Vector3 m_perlinPower = new Vector3(1.2f, 0.0f, 0.0f);
+    public Vector2Int m_perlinAdd = new Vector2Int(10, 1);
+    TerrainModifier m_tm;
 
     public enum Face
     {
@@ -27,16 +33,20 @@ public class WorldGen : MonoBehaviour
 
     void Start()
     {
-        m_data = new byte[m_worldX, m_worldY, m_worldZ];
+        m_data = new byte[m_worldX, m_worldY, m_worldZ];              
+        m_tm = FindObjectOfType<TerrainModifier>();
+    }
 
+    public void StartGame()
+    {
         for (int x = 0; x < m_worldX; x++)
         {
             for (int z = 0; z < m_worldZ; z++)
             {
-                int stone = PerlinNoise(x, 10, z, 10, 3, 1.2f);
-                stone += PerlinNoise(x, 350, z, 20, 4, 0) + 10;
+                int stone = PerlinNoise(x, m_perlinY[0], z, m_perlinScale[0], m_perlinHeight[0], m_perlinPower[0]);
+                stone += PerlinNoise(x, m_perlinY[1], z, m_perlinScale[1], m_perlinHeight[1], m_perlinPower[1]) + m_perlinAdd[0];
 
-                int dirt = PerlinNoise(x, 100, z, 50, 3, 0) + 1;
+                int dirt = PerlinNoise(x, m_perlinY[2], z, m_perlinScale[2], m_perlinHeight[2], m_perlinPower[2]) + m_perlinAdd[1];
 
 
                 for (int y = 0; y < m_worldY; y++)
@@ -70,7 +80,8 @@ public class WorldGen : MonoBehaviour
                     m_chunks[x, y, z].m_chunkZ = z * m_chunkSize;
                 }
             }
-        }        
+        }
+        m_tm.m_isReady = true;
     }
 
     // Update is called once per frame

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using UnityEngine;
 using UnityEngine.UIElements;
+using UnityEngine.Video;
 using static WorldGen;
 
 public class Blockholder : MonoBehaviour
@@ -36,9 +37,26 @@ public class Blockholder : MonoBehaviour
     public Transform m_eyeFour;
 
     public float m_shotDelay = 5f;
+    public float m_projectileSpeed = 5f;
+    public float m_projectileLifespan = 10f;
+    public float m_basicDamage = 5f;
+    public float m_explosionDamage = 10f;
+    public float m_explosionRadius = 4f;
+    public float m_posisonDamage = 4f;
+    public float m_posisonTime = 3f;
+    public float m_posisonTick = 1f;
+    public float m_paralysisDamage = 2f;
+    public float m_paralysisTime = 3f;
+
     float m_shotTime;
+    bool m_canShoot = true;
+    public float m_searchPlayerTime = 5f;
+    float m_lostPlayerTime;
     public Projectile m_projectile;
     public GameObject m_projectileGO;
+
+    public float m_hp = 50f;
+    float m_currentHP;
 
     // Start is called before the first frame update
     void Start()
@@ -110,6 +128,7 @@ public class Blockholder : MonoBehaviour
         }
 
         m_shotTime = Time.time;
+        m_currentHP = m_hp;
 
         MeshGen();
     }
@@ -117,54 +136,95 @@ public class Blockholder : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.LookAt(m_player.transform.position);
+        Ray ray = new Ray(m_eyeOne.position+ m_eyeOne.forward,  (m_player.transform.position + (-m_player.transform.up * 0.1f)) - (m_eyeOne.position+m_eyeOne.forward));
+        Debug.DrawRay(ray.origin, ray.direction, UnityEngine.Color.magenta);
+        RaycastHit hit;
 
-        if (m_shotTime + m_shotDelay <= Time.time)
+        if (Physics.Raycast(ray, out hit))
+        {
+            if (hit.collider == m_player.m_collider)
+            {
+                m_lostPlayerTime = 0.0f;
+                m_canShoot = true;
+            }
+            else
+            {
+                if(m_lostPlayerTime <= m_searchPlayerTime)
+                {
+                    m_lostPlayerTime += Time.deltaTime;
+                }
+                else
+                {
+                    m_canShoot=false;
+                }
+            }
+        }
+        transform.LookAt(m_player.transform.position);
+        if (m_shotTime + m_shotDelay <= Time.time && m_canShoot)
         {
             ShootProjectile();
             m_shotTime = Time.time;
         }
     }
 
+    public void TakeDamage(float damage)
+    {
+        m_currentHP -= damage;
+        if (m_currentHP <= 0)
+        {
+            Destroy(gameObject);
+        }
+    }
+
     void ShootProjectile()
     {
-        int eye = Random.Range(1, 4);
-        GameObject projectile = new GameObject();
+        int eye = Random.Range(1, 5);
+        var projectileGO = Instantiate(m_projectileGO);
+        var mainPS = projectileGO.GetComponentInChildren<ParticleSystem>().main;
+        var trail = projectileGO.GetComponentInChildren<TrailRenderer>();
+        var projectile = projectileGO.GetComponent<Projectile>();
+        projectile.m_lifeTime = m_projectileLifespan;
+        projectile.m_parent = gameObject;
 
         switch (eye)
         {
             case 1:
-                projectile = Instantiate(m_projectileGO, m_eyeOne.position + m_eyeOne.forward, Quaternion.identity);
-                projectile.GetComponent<SphereCollider>().radius = 1;
-                var main = projectile.GetComponentInChildren<ParticleSystem>().main;
-                main.startSize = 1;
-                main.startColor = UnityEngine.Color.red;
+                projectileGO.transform.SetPositionAndRotation(m_eyeOne.position + m_eyeOne.forward, Quaternion.identity);
+                mainPS.startColor = UnityEngine.Color.red;
+                trail.startColor = UnityEngine.Color.red;
+                projectile.m_type = Projectile.ProjectileType.RAD;
+                projectile.m_damage = m_explosionDamage;
+                projectile.m_explosionRadius = m_explosionRadius;
                 break;
             case 2:
-                projectile = Instantiate(m_projectileGO, m_eyeTwo.position + m_eyeTwo.forward, Quaternion.identity);
-                projectile.GetComponent<SphereCollider>().radius = 1;
-                main = projectile.GetComponentInChildren<ParticleSystem>().main;
-                main.startSize = 1;
-                main.startColor = UnityEngine.Color.green;
+                projectileGO.transform.SetPositionAndRotation(m_eyeTwo.position + m_eyeTwo.forward, Quaternion.identity);
+                mainPS.startColor = UnityEngine.Color.green;
+                trail.startColor = UnityEngine.Color.green;
+                projectile.m_type = Projectile.ProjectileType.POI;
+                projectile.m_damage = m_posisonDamage;
+                projectile.m_poisonTick = m_posisonTick;
+                projectile.m_poisonTime = m_posisonTime;
                 break;
             case 3:
-                projectile = Instantiate(m_projectileGO, m_eyeThree.position + m_eyeThree.forward, Quaternion.identity);
-                projectile.GetComponent<SphereCollider>().radius = 1;
-                main = projectile.GetComponentInChildren<ParticleSystem>().main;
-                main.startSize = 1;
-                main.startColor = UnityEngine.Color.blue;
+                projectileGO.transform.SetPositionAndRotation(m_eyeThree.position + m_eyeThree.forward, Quaternion.identity);
+                mainPS.startColor = UnityEngine.Color.blue;
+                trail.startColor = UnityEngine.Color.blue;
+                projectile.m_type = Projectile.ProjectileType.DMG;
+                projectile.m_damage = m_basicDamage;
                 break;
             case 4:
-                projectile = Instantiate(m_projectileGO, m_eyeFour.position + m_eyeFour.forward, Quaternion.identity);
-                projectile.GetComponent<SphereCollider>().radius = 1;
-                main = projectile.GetComponentInChildren<ParticleSystem>().main;
-                main.startSize = 1;
-                main.startColor = UnityEngine.Color.magenta;
+                projectileGO.transform.SetPositionAndRotation(m_eyeFour.position + m_eyeFour.forward, Quaternion.identity);
+                mainPS.startColor = UnityEngine.Color.magenta;
+                trail.startColor = UnityEngine.Color.magenta;
+                projectile.m_type = Projectile.ProjectileType.PAR;
+                projectile.m_damage = m_paralysisDamage;
+                projectile.m_paralysisTime = m_paralysisTime;
                 break;
         }
-        projectile.GetComponent<Rigidbody>().velocity = -(projectile.transform.position - (m_player.gameObject.transform.position - m_player.gameObject.transform.up)).normalized * 5;
+        projectileGO.GetComponent<Rigidbody>().velocity = -(projectileGO.transform.position - (m_player.gameObject.transform.position - (m_player.gameObject.transform.up / 2))).normalized * m_projectileSpeed;
     }
 
+    #region MeshGeneration
     public byte BlockType(int x, int y, int z)
     {
         if (x >= 5 || x < 0 || y >= 5 || y < 0 || z >= 5 || z < 0)
@@ -206,7 +266,6 @@ public class Blockholder : MonoBehaviour
                 return false;
         }
     }
-
     public void MeshGen()
     {
         for (int x = 0; x < 5; x++)
@@ -411,4 +470,5 @@ public class Blockholder : MonoBehaviour
 
         m_faceCount = 0;
     }
+    #endregion
 }
