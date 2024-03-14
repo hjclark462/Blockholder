@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2213238452776082654}
   - component: {fileID: 5544615143560917229}
-  m_Layer: 6
+  m_Layer: 2
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -98,7 +98,7 @@ MeshRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1273615906190848633}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
@@ -144,7 +144,7 @@ GameObject:
   - component: {fileID: 8016067623455491007}
   - component: {fileID: 6413790402037421664}
   - component: {fileID: 594450735123303816}
-  m_Layer: 6
+  m_Layer: 2
   m_Name: Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -432,12 +432,17 @@ MonoBehaviour:
   m_walkSpeed: 5
   m_jumpSpeed: 5
   m_characterController: {fileID: 0}
+  m_stopUpdate: 0
+  m_canPlace: 1
   m_health: 100
   m_currentHP: 100
-  m_healRate: 1
+  m_healRate: 0.1
   m_collider: {fileID: 0}
   m_canAttack: 1
   m_attackTime: 3
+  m_currentAttackTime: 0
+  m_attackRate: 4
+  m_atackCooldown: 1
   m_attackRange: 5
   m_projectileGO: {fileID: 8590908145765616126, guid: b562b37929c561f4c8d0bfa93b7704c0,
     type: 3}
@@ -512,7 +517,7 @@ MeshRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7522423281633300239}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0

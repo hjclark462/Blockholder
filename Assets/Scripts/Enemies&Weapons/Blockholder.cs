@@ -172,6 +172,7 @@ public class Blockholder : MonoBehaviour
         m_currentHP -= damage;
         if (m_currentHP <= 0)
         {
+            GameManager.Instance.CheckRoundEnd(this);
             Destroy(gameObject);
         }
     }

@@ -10,7 +10,7 @@ public class ChunkGen : MonoBehaviour
     float m_texUnit = 0.25f;
     Vector2 m_stoneTexture = new Vector2(3, 1);    
     Vector2 m_dirtTexture = new Vector2(1, 1);
-    Vector2 m_grassTopTexture = new Vector2(2, 1);    
+    Vector2 m_grassTopTexture = new Vector2(2, 1);
 
     Mesh m_mesh;
     MeshCollider m_collider;
@@ -55,7 +55,7 @@ public class ChunkGen : MonoBehaviour
                 for (int z = 0; z < m_size; z++)
                 {
                     if (BlockType(x, y, z) != 0)
-                    {
+                    {                        
                         if (BlockType(x, y + 1, z) == 0 || MaxBlock(WorldGen.Face.Top, y + m_chunkY + 1))
                         {
                             CubeTop(x, y, z, BlockType(x, y, z));

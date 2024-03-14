@@ -1,15 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
-using Unity.VisualScripting;
 
 public class WorldGen : MonoBehaviour
 {
     public byte[,,] m_data;
     public int m_worldX = 16;
     public int m_worldY = 16;
-    public int m_worldZ = 16;
+    public int m_worldZ = 16;    
 
     public GameObject m_chunk;
     public ChunkGen[,,] m_chunks;
@@ -19,6 +15,7 @@ public class WorldGen : MonoBehaviour
     public Vector3 m_perlinHeight = new Vector3(3.0f, 4.0f, 3.0f);
     public Vector3 m_perlinPower = new Vector3(1.2f, 0.0f, 0.0f);
     public Vector2Int m_perlinAdd = new Vector2Int(10, 1);
+
     TerrainModifier m_tm;
 
     public enum Face
@@ -36,6 +33,12 @@ public class WorldGen : MonoBehaviour
         m_data = new byte[m_worldX, m_worldY, m_worldZ];              
         m_tm = FindObjectOfType<TerrainModifier>();
     }
+
+    public void ClearData()
+    {    
+        m_data = new byte[m_worldX, m_worldY, m_worldZ];        
+    }
+
 
     public void StartGame()
     {
@@ -81,13 +84,7 @@ public class WorldGen : MonoBehaviour
                 }
             }
         }
-        m_tm.m_isReady = true;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
+        m_tm.m_isReady = true;      
     }
 
     public byte NeighbourBlockType(int x, int y, int z)

@@ -218,22 +218,22 @@ MonoBehaviour:
   m_eyeTwo: {fileID: 4352606546956614038}
   m_eyeThree: {fileID: 3779831595015270366}
   m_eyeFour: {fileID: 8355524899307312190}
-  m_shotDelay: 5
-  m_projectileSpeed: 10
+  m_shotDelay: 3
+  m_projectileSpeed: 20
   m_projectileLifespan: 10
-  m_basicDamage: 5
-  m_explosionDamage: 10
+  m_basicDamage: 10
+  m_explosionDamage: 15
   m_explosionRadius: 5
-  m_posisonDamage: 4
+  m_posisonDamage: 8
   m_posisonTime: 3
-  m_posisonTick: 1
-  m_paralysisDamage: 2
+  m_posisonTick: 2
+  m_paralysisDamage: 4
   m_paralysisTime: 3
   m_searchPlayerTime: 5
   m_projectile: {fileID: 0}
   m_projectileGO: {fileID: 8590908145765616126, guid: b562b37929c561f4c8d0bfa93b7704c0,
     type: 3}
-  m_hp: 100
+  m_hp: 50
 --- !u!1 &3269100869320333788
 GameObject:
   m_ObjectHideFlags: 0

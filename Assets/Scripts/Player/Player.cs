@@ -18,6 +18,7 @@ public class Player : MonoBehaviour
     bool m_canMove = true;
     public float m_jumpSpeed = 5;
     public CharacterController m_characterController;
+    public bool m_stopUpdate;
 
     Vector2 m_destroyArms = new Vector2(0.25f, 0.5f);
     Vector2 m_placeArms = new Vector2(0.25f, 0.0f);
@@ -27,10 +28,16 @@ public class Player : MonoBehaviour
     public float m_currentHP;
     public float m_healRate;
 
+    public Vector3 m_defPos;
+    public Quaternion m_defRot;
+
     public Collider m_collider;
 
     public bool m_canAttack = true;
     public float m_attackTime;
+    public float m_currentAttackTime;
+    public float m_attackRate;
+    public float m_atackCooldown;
     public float m_attackRange;
     public GameObject m_projectileGO;
     public float m_projectileLifespan;
@@ -51,6 +58,7 @@ public class Player : MonoBehaviour
         Transform t = transform;
         m_gm.m_player = this;
         m_currentHP = m_health;
+        m_currentAttackTime = m_attackTime;
         m_collider = GetComponent<CapsuleCollider>();
         m_leftArm.GetComponent<MeshRenderer>().material.mainTextureScale = new Vector2(0.25f, 0.25f);
         m_leftArm.GetComponent<MeshRenderer>().material.mainTextureOffset = m_placeArms;
@@ -69,14 +77,22 @@ public class Player : MonoBehaviour
 
         m_input.PlayerControls.LeftHand.started += LeftHand;
         m_input.PlayerControls.RightHand.started += RightHand;
+        m_input.PlayerControls.Pause.started += Pause;
         m_input.PlayerControls.SwapPlace.started += SwapArmType;        
-
-        m_currentHP = m_health;
+        
+        m_gm.UpdateAP();
         m_gm.UpdateHealth();        
+        m_gm.UpdateModeUI();
     }
 
     void FixedUpdate()
     {
+        if(m_stopUpdate)
+        {
+            gameObject.transform.position = m_defPos;
+            gameObject.transform.rotation = m_defRot;
+            return;
+        }
         Vector3 forward = transform.TransformDirection(Vector3.forward);
         Vector3 right = transform.TransformDirection(Vector3.right);
         Vector3 move = m_input.PlayerControls.Move.ReadValue<Vector2>();
@@ -104,12 +120,25 @@ public class Player : MonoBehaviour
             m_moveDirection.y -= (m_gravity * m_gravityMultiplier) * Time.deltaTime;
         }
         m_camera.MoveCamera(m_input.PlayerControls.CameraView.ReadValue<Vector2>(), m_gm.m_device == ControllerType.KEYBOARD ? m_camSensitivity / 10 : m_camSensitivity);
-        m_characterController.Move(m_moveDirection * Time.deltaTime);
+        m_characterController.Move(m_moveDirection * Time.deltaTime);        
     }
 
     void Update()
     {
+        if(m_currentAttackTime < m_attackTime)
+        {
+            UpdateAttack(m_atackCooldown * Time.deltaTime);
+        }
+        if(m_currentHP < m_health)
+        {
+            TakeDamage(-m_healRate * Time.deltaTime);
+        }
+    }
 
+    void Pause(InputAction.CallbackContext obj)
+    {
+        if(m_gm.m_gameState == GameState.GAME)
+        m_gm.UpdateGameState(GameState.PAUSE);
     }
 
     public void TakeDamage(float damage)
@@ -145,46 +174,57 @@ public class Player : MonoBehaviour
         m_canMove = true;
     }
 
+    public void UpdateAttack(float time)
+    {
+        m_currentAttackTime += time;
+        m_gm.UpdateAP();
+    }
+
     void LeftHand(InputAction.CallbackContext obj)
     {
-        var projectileGO = Instantiate(m_projectileGO);
-        var mainPS = projectileGO.GetComponentInChildren<ParticleSystem>().main;
-        var trail = projectileGO.GetComponentInChildren<TrailRenderer>();
-        var projectile = projectileGO.GetComponent<Projectile>();
-        projectile.m_lifeTime = m_projectileLifespan;
-        projectile.m_parent = gameObject;
-        projectileGO.transform.SetPositionAndRotation(m_leftArm.transform.position, Quaternion.identity);
+        if (m_currentAttackTime >= m_attackRate/m_attackTime)
+        {
+            var projectileGO = Instantiate(m_projectileGO);
+            var mainPS = projectileGO.GetComponentInChildren<ParticleSystem>().main;
+            var trail = projectileGO.GetComponentInChildren<TrailRenderer>();
+            var projectile = projectileGO.GetComponent<Projectile>();
+            projectile.m_lifeTime = m_projectileLifespan;
+            projectile.m_parent = gameObject;
+            projectileGO.transform.SetPositionAndRotation(m_leftArm.transform.position, Quaternion.identity);
 
-        if (m_canPlace)
-        {
-            mainPS.startColor = UnityEngine.Color.cyan;
-            trail.startColor = UnityEngine.Color.cyan;
-            projectile.m_type = Projectile.ProjectileType.RAD;
-            projectile.m_explosionRadius = m_projectileRadius;
-            projectile.m_damage = 0;
-            projectile.m_block = (byte)Random.Range(1, 3);
-        }
-        else
-        {
-            mainPS.startColor = UnityEngine.Color.yellow;
-            trail.startColor = UnityEngine.Color.yellow;
-            projectile.m_type = Projectile.ProjectileType.DMG;
-            projectile.m_damage = m_projectileDamage;
-            projectile.m_block = 0;
-        }
+            if (m_canPlace)
+            {
+                mainPS.startColor = UnityEngine.Color.cyan;
+                trail.startColor = UnityEngine.Color.cyan;
+                projectile.m_type = Projectile.ProjectileType.RAD;
+                projectile.m_explosionRadius = m_projectileRadius;
+                projectile.m_damage = 0;
+                projectile.m_block = (byte)Random.Range(1, 3);
+            }
+            else
+            {
+                mainPS.startColor = UnityEngine.Color.yellow;
+                trail.startColor = UnityEngine.Color.yellow;
+                projectile.m_type = Projectile.ProjectileType.DMG;
+                projectile.m_damage = m_projectileDamage;
+                projectile.m_block = 0;
+            }
 
-        Ray camRay = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
-        RaycastHit hit;
-        Vector3 destination;
-        if (Physics.Raycast(camRay, out hit, m_attackRange * 10, ~(1 << LayerMask.NameToLayer("Projectile"))))
-        {
-            destination = hit.point;
+            Ray camRay = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+            RaycastHit hit;
+            Vector3 destination;
+            if (Physics.Raycast(camRay, out hit, m_attackRange * 10, ~(1 << LayerMask.NameToLayer("Projectile"))))
+            {
+                destination = hit.point;
+            }
+            else
+            {
+                destination = camRay.GetPoint(m_attackRange * 10);
+            }
+            projectileGO.GetComponent<Rigidbody>().velocity = (destination - projectileGO.transform.position).normalized * m_projectileSpeed;
+
+            m_currentAttackTime -= m_attackRange/m_attackTime;
         }
-        else
-        {
-            destination = camRay.GetPoint(m_attackRange * 10);
-        }
-        projectileGO.GetComponent<Rigidbody>().velocity = (destination - projectileGO.transform.position).normalized * m_projectileSpeed;
     }
 
     void RightHand(InputAction.CallbackContext obj)

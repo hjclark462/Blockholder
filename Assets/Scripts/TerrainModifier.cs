@@ -140,14 +140,14 @@ public class TerrainModifier : MonoBehaviour
             {
                 float distance = Vector2.Distance(new Vector2(x * m_world.m_chunkSize + (m_world.m_chunkSize * 0.5f), z * m_world.m_chunkSize + (m_world.m_chunkSize * 0.5f)), new Vector2(playerPos.x, playerPos.z));
 
-                if (distance < distanceToLoad)
+                if (distance < distanceToLoad && GameManager.Instance.m_gameState == GameState.GAME)
                 {
                     if (m_world.m_chunks[x, 0, z] == null)
                     {
                         m_world.GenerateColumn(x, z);
                     }
                 }
-                else if (distance > distanceToUnload)
+                else if (distance > distanceToUnload || GameManager.Instance.m_gameState != GameState.GAME)
                 {
                     if (m_world.m_chunks[x, 0, z] != null)
                     {

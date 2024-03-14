@@ -70,6 +70,7 @@ public class Projectile : MonoBehaviour
         else if (collision.gameObject.layer == LayerMask.NameToLayer("Enemy"))
         {
             collision.gameObject.transform.parent.GetComponent<Blockholder>().TakeDamage(m_damage);
+            GameManager.Instance.HitReticle().Forget();
         }
         if (collision.gameObject.layer != LayerMask.NameToLayer("Projectile"))
         {
