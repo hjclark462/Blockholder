@@ -155,7 +155,7 @@ public class GameManager : MonoBehaviour
         m_quitMenu.onClick.AddListener(delegate () { QuitGame(); });
 
         //Info Setup                
-        m_infoBack.onClick.AddListener(delegate () { MainMenu(); });
+        m_infoBack.onClick.AddListener(delegate () { UpdateGameState(GameState.MENU); });
 
         //Death Setup
         m_respawnButton.onClick.AddListener(delegate () { Respawn(); });
@@ -208,6 +208,11 @@ public class GameManager : MonoBehaviour
                 End();
                 break;
         }
+    }
+
+    void InfoBack()
+    {
+        UpdateGameState(GameState.MENU);
     }
 
     void MainMenu()
